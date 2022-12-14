@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # apps
-
+    'accounts.apps.AccountsConfig',     
 
 
     # packages
@@ -75,6 +75,7 @@ REST_FRAMEWORK = {
 }
 
 ROOT_URLCONF = 'Gp_Backend.urls'
+AUTH_USER_MODEL = 'accounts.Account'
 
 TEMPLATES = [
     {
