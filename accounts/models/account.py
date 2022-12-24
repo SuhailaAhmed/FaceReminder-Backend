@@ -1,5 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 
 
 class CustomUserManager(BaseUserManager):
@@ -8,7 +12,7 @@ class CustomUserManager(BaseUserManager):
         Creates and saves a User with the given email and password.
         """
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
 
         user = self.model(
             email=self.normalize_email(email),
@@ -32,12 +36,12 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
-class Account (AbstractBaseUser, PermissionsMixin):
+class Account(AbstractBaseUser, PermissionsMixin):
     fullname = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
 
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
