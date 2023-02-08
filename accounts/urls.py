@@ -1,5 +1,6 @@
 from django.urls import path, include
 from accounts.views.auth_views import register, login, logout, forget_password,check_token,set_password
+from accounts.views.profile_views import profiles
 from accounts.swagger import register_endpoint, login_endpoint, logout_endpoint, forger_password_endpoint, set_password_endpoint
 
 auth_urls = [
@@ -13,4 +14,5 @@ auth_urls = [
 
 urlpatterns = [
     path('auth/', include(auth_urls)),
+    path('profile/',profiles, name='profile')
 ]

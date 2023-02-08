@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from accounts.serializers import AccountSerializer
+from accounts.serializers.account import AccountSerializer
 from accounts.models.account import Account
+from accounts.models.profile import Profile
 from accounts.models.token import AccountToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
@@ -37,7 +38,9 @@ def register(request):
     account.save()
     token, created = Token.objects.get_or_create(user=account)
 
-    return JsonResponse({"fullname": account.fullname, "token": token.key}, status=201)
+    Profile.objects.create(account=account, fullname=body["fullname"])
+
+    return JsonResponse({"fullname": body["fullname"], "token": token.key}, status=201)
 
 
 @api_view(
@@ -63,7 +66,7 @@ def login(request):
             return JsonResponse({"error": "Wrong password"}, status=400)
 
         token, created = Token.objects.get_or_create(user=account)
-        return JsonResponse({"token": token.key, "fullname": account.fullname}, status=200)
+        return JsonResponse({"token": token.key, "email": account.email}, status=200)
 
     except Account.DoesNotExist:
         return JsonResponse({"error": "No Account with this email"}, status=400)
