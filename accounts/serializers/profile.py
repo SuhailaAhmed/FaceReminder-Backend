@@ -6,5 +6,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model= Profile
-        fields = '__all__'
         extra_fields = ['email']
+        exclude = ['account']

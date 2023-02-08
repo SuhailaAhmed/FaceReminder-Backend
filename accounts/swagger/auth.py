@@ -4,7 +4,7 @@ from accounts.views.auth_views import register, login, logout, forget_password, 
 
 register_endpoint = swagger_auto_schema(
     method= 'Post',
-    request_body= openapi.Schema(type=openapi.TYPE_OBJECT, 
+    request_body= openapi.Schema(type=openapi.TYPE_OBJECT, required=['fullname', 'email', 'password', 'confirm_password'], 
     properties={
         "fullname": openapi.Schema(type=openapi.TYPE_STRING, description="Full Name of user"),
         "email": openapi.Schema(type=openapi.TYPE_STRING, description="Email of user"),
@@ -18,7 +18,7 @@ register_endpoint = swagger_auto_schema(
 
 login_endpoint = swagger_auto_schema(
     method= 'Post',
-    request_body= openapi.Schema(type=openapi.TYPE_OBJECT, 
+    request_body= openapi.Schema(type=openapi.TYPE_OBJECT, required=['email', 'password'],
     properties={
         "email": openapi.Schema(type=openapi.TYPE_STRING, description="Email of user"),
         "password": openapi.Schema(type=openapi.TYPE_STRING, description="Password of user"),
@@ -35,7 +35,7 @@ logout_endpoint = swagger_auto_schema(
 
 forger_password_endpoint = swagger_auto_schema(
     method= 'Post',
-    request_body= openapi.Schema(type=openapi.TYPE_OBJECT,
+    request_body= openapi.Schema(type=openapi.TYPE_OBJECT, required=['email'],
     properties={
         "email": openapi.Schema(type=openapi.TYPE_STRING, description="Email of user"),
     }
@@ -45,7 +45,7 @@ forger_password_endpoint = swagger_auto_schema(
 
 set_password_endpoint = swagger_auto_schema(
     method= 'Post',
-    request_body= openapi.Schema(type=openapi.TYPE_OBJECT,
+    request_body= openapi.Schema(type=openapi.TYPE_OBJECT, required=['password', 'confirm_password'],
     properties={
         "password": openapi.Schema(type=openapi.TYPE_STRING, description="Password of user"),
         "confirm_password": openapi.Schema(type=openapi.TYPE_STRING, description="Confirm Password of user"),

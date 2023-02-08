@@ -33,6 +33,9 @@ def register(request):
 
     if not account_serialized.is_valid():
         return JsonResponse(account_serialized.errors, status=400)
+
+    if 'fullname' not in body:
+        return JsonResponse({'message': 'fullname must be sent in body'}, status=400)
         
     account = account_serialized.save()
     account.set_password(body['password'])
