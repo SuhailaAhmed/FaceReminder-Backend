@@ -7,7 +7,6 @@ from accounts.serializers.profile import ProfileSerializer
 def get_profile(request):
     try:
         account = request.user
-        print(account)
         profile = account.profile
         profile_serialized = ProfileSerializer(profile)
         return JsonResponse(profile_serialized.data, status=200)
@@ -16,7 +15,18 @@ def get_profile(request):
 
 
 def update_profile(request):
-    return
+    try:
+        account = request.user
+        profile = account.profile
+        profile_serialized = ProfileSerializer(profile, data=request.data, partial=True)
+        if profile_serialized.is_valid():
+            profile_serialized.save()
+            return JsonResponse(profile_serialized.data, status = 200)
+        else:
+            return JsonResponse(profile_serialized.errors, status = 400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
 
 
 @api_view(["Get", "Patch"])
