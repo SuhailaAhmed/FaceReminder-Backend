@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from accounts.serializers import AccountSerializer 
+from accounts.serializers.account import AccountSerializer 
 from accounts.models.account import Account
+from accounts.models.profile import Profile
 from accounts.models.tokens import AccountToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
@@ -38,7 +39,9 @@ def register(request):
     account.save()
     token, created = Token.objects.get_or_create(user=account)
 
-    return JsonResponse({'fullname': account.fullname, "token": token.key}, status= 201)
+    Profile.objects.create(account=account, fullname=body['fullname'])
+    
+    return JsonResponse({'fullname': body['fullname'], "token": token.key}, status= 201)
 
 
 @api_view(['Post',])

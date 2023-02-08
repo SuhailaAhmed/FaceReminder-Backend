@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+from django.db.models import signals
+from django.dispatch import receiver
+from accounts.models.profile import Profile
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -32,8 +34,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
-class Account (AbstractBaseUser, PermissionsMixin):
-    fullname = models.CharField(max_length=100)
+class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
 
