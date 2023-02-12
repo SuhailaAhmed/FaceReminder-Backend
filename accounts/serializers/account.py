@@ -4,4 +4,4 @@ from accounts.models import Account
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = "__all__"
+        exclude = ('is_staff', 'is_superuser', 'groups', 'user_permissions')
