@@ -139,7 +139,9 @@ def forget_password(request):
     link = settings.FORGET_PASSWORD_URL + str(token.uuid)
     message = render_to_string("accounts/forget_password.html", {"link": link, "fullname": account.profile.fullname})
     plain_message = strip_tags(message)
+    print('before send mail')
     mail.send_mail(subject, plain_message, settings.EMAIL_HOST_USER, [email], html_message=message)
+    print('after send mail')
     return JsonResponse({"message": "Reset Password link is sent successfully."}, status=200)
 
 

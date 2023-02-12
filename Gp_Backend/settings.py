@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-q@ice*jdn!yhy962nx+s!m-y@(ymrq&^n^0fnbfr6a3^2*4=2m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'gp.uniparticle.com']
 
 
 # Application definition
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'Gp_Backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if (ENV == 'DEV'):
+if (ENV in ['LOCAL', 'DEV']):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -182,4 +182,5 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-FORGET_PASSWORD_URL = 'http://localhost:8000/accounts/auth/check-token/'
+BASE_URL = 'http://127.0.0.1:8000/' if ENV == 'LOCAL' else 'http://gp.uniparticle.com/'
+FORGET_PASSWORD_URL = BASE_URL + 'accounts/auth/check-token/'
