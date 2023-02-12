@@ -16,6 +16,11 @@ from datetime import datetime, timedelta
 
 # Create your views here.
 
+def has_numbers(inputString):
+    return any(char.isdigit() for char in inputString)
+
+def has_characters(inputString):
+    return any(char.isalpha() for char in inputString)
 
 @api_view(
     [
@@ -24,9 +29,27 @@ from datetime import datetime, timedelta
 )
 def register(request):
     body = request.data
+    password = request.data.get("password", None)
+    confirm_password = request.data.get("confirm_password", None)
+    full_name = request.data.get("fullname", None)
 
-    if body["password"] != body["confirm_password"]:
+    if not password:
+        return JsonResponse({"error": "Please write password!"}, status=400)
+
+    if not confirm_password:
+        return JsonResponse({"error": "Please confirm your password!"}, status=400)
+
+    if password != confirm_password:
         return JsonResponse({"messgae": "Password and Confirm passwords aren't the same!"}, status=400)
+
+    if len(password) < 8:
+        return JsonResponse({"message": "Password must be at least 8 characters!"}, status=400)
+
+    if not has_numbers(password) or not has_characters(password):
+        return JsonResponse({"message": "Password must contain numbers and characters!"}, status=400)
+
+    if not full_name:
+        return JsonResponse({"error": "Please write your full name!"}, status=400)
 
     account_serialized = AccountSerializer(data=body)
 
@@ -34,11 +57,10 @@ def register(request):
         return JsonResponse(account_serialized.errors, status=400)
 
     account = account_serialized.save()
-    account.set_password(body["password"])
-    account.save()
+    
     token, created = Token.objects.get_or_create(user=account)
 
-    Profile.objects.create(account=account, fullname=body["fullname"])
+    Profile.objects.create(account=account, fullname=full_name)
 
     return JsonResponse({"token": token.key, "account": AccountSerializer(account).data}, status=201)
 
