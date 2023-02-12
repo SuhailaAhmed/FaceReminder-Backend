@@ -40,7 +40,7 @@ def register(request):
 
     Profile.objects.create(account=account, fullname=body["fullname"])
 
-    return JsonResponse({"fullname": body["fullname"], "token": token.key}, status=201)
+    return JsonResponse({"token": token.key, "account": AccountSerializer(account).data}, status=201)
 
 
 @api_view(
@@ -66,7 +66,7 @@ def login(request):
             return JsonResponse({"error": "Wrong password"}, status=400)
 
         token, created = Token.objects.get_or_create(user=account)
-        return JsonResponse({"token": token.key, "email": account.email}, status=200)
+        return JsonResponse({"token": token.key, "account": AccountSerializer(account).data}, status=200)
 
     except Account.DoesNotExist:
         return JsonResponse({"error": "No Account with this email"}, status=400)
