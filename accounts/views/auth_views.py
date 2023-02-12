@@ -26,7 +26,7 @@ def register(request):
     body = request.data
 
     if body["password"] != body["confirm_password"]:
-        return JsonResponse({"messgae": "two passwords are not identical"}, status=400)
+        return JsonResponse({"messgae": "Password and Confirm passwords aren't the same!"}, status=400)
 
     account_serialized = AccountSerializer(data=body)
 
@@ -54,22 +54,22 @@ def login(request):
     password = body.get("password", None)
 
     if not email:
-        return JsonResponse({"error": "email must be sent in body"}, status=400)
+        return JsonResponse({"error": "Please write your email!"}, status=400)
 
     if not password:
-        return JsonResponse({"error": "password must be sent in body"}, status=400)
+        return JsonResponse({"error": "Please write your password!"}, status=400)
 
     try:
         account = Account.objects.get(email=email)
 
         if not account.check_password(password):
-            return JsonResponse({"error": "Wrong password"}, status=400)
+            return JsonResponse({"error": "Wrong password!"}, status=400)
 
         token, created = Token.objects.get_or_create(user=account)
         return JsonResponse({"token": token.key, "account": AccountSerializer(account).data}, status=200)
 
     except Account.DoesNotExist:
-        return JsonResponse({"error": "No Account with this email"}, status=400)
+        return JsonResponse({"error": "There's no Account with this email!"}, status=400)
 
 
 @api_view(
@@ -82,14 +82,12 @@ def logout(request):
 
     try:
         user = request.user
-        print(user)
-        print(Token.objects.all())
         token = Token.objects.get(user=user)
         token.delete()
-        return JsonResponse({"message": "logout sucessfully"}, status=200)
+        return JsonResponse({"message": "logout sucessfully."}, status=200)
 
     except Token.DoesNotExist:
-        return JsonResponse({"error": "no token for this user"}, status=400)
+        return JsonResponse({"error": "You are already loged out!"}, status=400)
 
 
 @api_view(
@@ -101,12 +99,12 @@ def forget_password(request):
     email = request.data.get("email", None)
 
     if not email:
-        return JsonResponse({"error": "email must be sent in body"}, status=400)
+        return JsonResponse({"error": "Please write your email!"}, status=400)
 
     try:
         account = Account.objects.get(email=email)
     except Account.DoesNotExist:
-        return JsonResponse({"error": "No Account with this email"}, status=400)
+        return JsonResponse({"error": "There's no Account with this email!"}, status=400)
 
     try:
         token = AccountToken.objects.get(account=account)
@@ -120,7 +118,7 @@ def forget_password(request):
     message = render_to_string("accounts/forget_password.html", {"link": link, "fullname": account.profile.fullname})
     plain_message = strip_tags(message)
     mail.send_mail(subject, plain_message, settings.EMAIL_HOST_USER, [email], html_message=message)
-    return JsonResponse({"message": "Reset Password link is sent successfully"}, status=200)
+    return JsonResponse({"message": "Reset Password link is sent successfully."}, status=200)
 
 
 @api_view(
@@ -134,12 +132,12 @@ def check_token(request, token):
         time_now = make_aware(datetime.now())
         if token.created_at + timedelta(days=1) < time_now:
             token.delete()
-            return JsonResponse({"error": "Token is expired"}, status=400)
+            return JsonResponse({"error": "Token is expired."}, status=400)
         token.created_at = time_now
         token.save()
-        return JsonResponse({"message": "Token is valid"}, status=200)
+        return JsonResponse({"message": "Token is valid."}, status=200)
     except AccountToken.DoesNotExist:
-        return JsonResponse({"error": "No Token with this uuid"}, status=400)
+        return JsonResponse({"error": "This token does not exist!"}, status=400)
 
 
 @api_view(
@@ -154,23 +152,23 @@ def set_password(request, token):
         time_now = make_aware(datetime.now())
         if token.created_at + timedelta(days=1) < time_now:
             token.delete()
-            return JsonResponse({"error": "Token is expired"}, status=400)
+            return JsonResponse({"error": "Token is expired!"}, status=400)
         password = request.data.get("password", None)
         confirm_password = request.data.get("confirm_password", None)
         if not password:
-            return JsonResponse({"error": "password must be sent in body"}, status=400)
+            return JsonResponse({"error": "Please write password!"}, status=400)
 
         if not confirm_password:
-            return JsonResponse({"error": "confirm_password must be sent in body"}, status=400)
+            return JsonResponse({"error": "Please confirm your password!"}, status=400)
 
         if password != confirm_password:
-            return JsonResponse({"messgae": "two passwords are not identical"}, status=400)
+            return JsonResponse({"messgae": "Password and Confirm passwords aren't the same!"}, status=400)
 
         if len(password) < 8:
-            return JsonResponse({"message": "password must be at least 8 characters"}, status=400)
+            return JsonResponse({"message": "Password must be at least 8 characters!"}, status=400)
 
         if not (password.isalnum() and not password.isalpha() and not password.isdigit()):
-            return JsonResponse({"message": "password must be alphanumeric"}, status=400)
+            return JsonResponse({"message": "Password must contain numbers and characters!"}, status=400)
 
         account = token.account
         account.set_password(password)
@@ -179,4 +177,4 @@ def set_password(request, token):
         return JsonResponse({"message": "Password is changed successfully"}, status=200)
 
     except AccountToken.DoesNotExist:
-        return JsonResponse({"error": "No Token with this uuid"}, status=400)
+        return JsonResponse({"error": "Token does not exist!"}, status=400)
