@@ -117,7 +117,7 @@ def forget_password(request):
 
     subject = "GP Account password reset"
     link = settings.FORGET_PASSWORD_URL + str(token.uuid)
-    message = render_to_string("accounts/forget_password.html", {"link": link, "fullname": account.fullname})
+    message = render_to_string("accounts/forget_password.html", {"link": link, "fullname": account.profile.fullname})
     plain_message = strip_tags(message)
     mail.send_mail(subject, plain_message, settings.EMAIL_HOST_USER, [email], html_message=message)
     return JsonResponse({"message": "Reset Password link is sent successfully"}, status=200)
