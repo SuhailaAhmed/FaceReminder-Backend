@@ -1,5 +1,6 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import FileUploadParser, FormParser, MultiPartParser
 from django.http import JsonResponse
 from accounts.serializers.profile import ProfileSerializer
 
@@ -16,6 +17,9 @@ def update_profile(request):
     try:
         account = request.user
         profile = account.profile
+        image = request.FILES.get('image', None)
+        if image is not None:
+            request.data['image'] = image
         profile_serialized = ProfileSerializer(profile, data=request.data, partial=True)
         if profile_serialized.is_valid():
             profile_serialized.save()
@@ -27,6 +31,7 @@ def update_profile(request):
 
 @api_view(['GET', 'PATCH'])
 @permission_classes([IsAuthenticated,])
+@parser_classes([FormParser, MultiPartParser, FileUploadParser])
 def profiles(request):
     if request.method == 'GET':
         return get_profile(request)

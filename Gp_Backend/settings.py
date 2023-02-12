@@ -183,3 +183,9 @@ EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 FORGET_PASSWORD_URL = 'http://localhost:8000/accounts/auth/check-token/'
+
+AWS_ACCESS_KEY_ID = 'AKIAR4YOFTT7VWQDNOO4'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_BUCKET_NAME = 'up-gp-team1'
+AWS_S3_REGION_NAME = 'eu-central-1'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
