@@ -1,6 +1,7 @@
 from django.db import models
 from Gp_Backend.s3_storages import MediaStorage
 
+
 class Connection(models.Model):
     account = models.ForeignKey("accounts.Account", on_delete=models.CASCADE, related_name="connections")
     image = models.ImageField(upload_to="connection/", storage=MediaStorage)
