@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-q@ice*jdn!yhy962nx+s!m-y@(ymrq&^n^0fnbfr6a3^2*4=2m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'gp.uniparticle.com']
+ALLOWED_HOSTS = ['gp.uniparticle.com', '127.0.0.1']
 
 
 # Application definition
@@ -184,3 +184,9 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 BASE_URL = 'http://127.0.0.1:8000/' if ENV == 'LOCAL' else 'http://gp.uniparticle.com/'
 FORGET_PASSWORD_URL = BASE_URL + 'accounts/auth/check-token/'
+
+AWS_ACCESS_KEY_ID = 'AKIAR4YOFTT7VWQDNOO4'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_BUCKET_NAME = 'up-gp-team1'
+AWS_S3_REGION_NAME = 'eu-central-1'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

@@ -11,3 +11,6 @@ class Profile(models.Model):
         return self.fullname
         
 
+
+    def __str__(self):
+        return self.fullname
