@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0004_remove_account_fullname'),
+        ('accounts', '0003_rename_token_accounttoken'),
     ]
 
     operations = [
