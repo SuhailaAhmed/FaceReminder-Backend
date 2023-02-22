@@ -3,6 +3,9 @@ from accounts.models.connection import Connection
 
 
 class ConnectionSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source="account.email", read_only=True)
+
     class Meta:
         model = Connection
-        fields = "__all__"
+        extra_fields = ["email"]
+        exclude = ["account"]
