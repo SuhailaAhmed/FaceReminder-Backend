@@ -57,6 +57,8 @@ def register(request):
         return JsonResponse(account_serialized.errors, status=400)
 
     account = account_serialized.save()
+    account.set_password(password)
+    account.save()
     
     token, created = Token.objects.get_or_create(user=account)
 
