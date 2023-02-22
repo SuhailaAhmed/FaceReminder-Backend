@@ -4,7 +4,7 @@ from Gp_Backend.s3_storages import MediaStorage
 
 class Connection(models.Model):
     account = models.ForeignKey("accounts.Account", on_delete=models.CASCADE, related_name="connections")
-    image = models.ImageField(upload_to="connection/", storage=MediaStorage)
+    image = models.ImageField(upload_to="connections/", storage=MediaStorage)
     name = models.CharField(max_length=100)
     relation = models.CharField(max_length=100)
     age = models.IntegerField(max_length=50, null=True, blank=True)
