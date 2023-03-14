@@ -1,14 +1,14 @@
-from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import FileUploadParser, FormParser, MultiPartParser
 from django.http import JsonResponse
-from accounts.serializers.connection import ConnectionSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 from accounts.models.connection import Connection
+from accounts.serializers.connection import ConnectionSerializer
 
 
 @api_view(
     [
-        "Post",
+        "POST",
     ]
 )
 @permission_classes([IsAuthenticated])
@@ -16,14 +16,10 @@ def create_connection(request):
     try:
         account = request.user
 
-        name = request.data.get("name", None)
-        relation = request.data.get("relation", None)
+        image = request.data.get("image", None)
 
-        if not name:
-            return JsonResponse({"error": "missing `name` field"}, status=400)
-
-        if not relation:
-            return JsonResponse({"error": "missing `relation` field"}, status=400)
+        if not image:
+            return JsonResponse({"error": "missing `image` field"}, status=400)
 
         connection_serialized = ConnectionSerializer(data=request.data, partial=True)
 
