@@ -22,7 +22,7 @@ auth_urls = [
 ]
 connection_urls = [
     path("", create_connection, name="create_connection"),
-    path("connections/<int:connection_id>", update_connection, name="update_connection"),
+    path("<int:connection_id>", update_connection, name="update_connection"),
 ]
 urlpatterns = [
     path("auth/", include(auth_urls)),
