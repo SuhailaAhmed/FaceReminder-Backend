@@ -26,4 +26,5 @@ urlpatterns = [
     path("profiles/", profiles, name="profile"),
     path("connections/", create_connection, name="create_connection"),
     path("connections/connection_id", update_connection, name="update_connection"),
+    # path("connections/account_id", , name="update_connection"),
 ]

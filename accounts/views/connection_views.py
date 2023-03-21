@@ -51,3 +51,22 @@ def update_connection(request, connection_id):
             return JsonResponse(connection_serialized.errors, status=400)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+
+
+def retrieve_connections(request):
+    account = request.user
+    connections = list(account.connections.all())
+    return JsonResponse({"data": connections}, status=200)
+
+
+@api_view(["POST", "GET"])
+@permission_classes(
+    [
+        IsAuthenticated,
+    ]
+)
+def connections(request):
+    if request.method == "POST":
+        return create_connection(request)
+    elif request.method == "GET":
+        return retrieve_connections(request)
