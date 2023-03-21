@@ -31,3 +31,23 @@ def create_connection(request):
         return JsonResponse(connection_serialized.data, status=201)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+
+
+@api_view(
+    [
+        "PATCH",
+    ]
+)
+@permission_classes([IsAuthenticated])
+def update_connection(request, connection_id):
+    try:
+        account = request.user
+        connection = account.connections.get(id=connection_id)
+        connection_serialized = ConnectionSerializer(instance=connection, data=request.data, partial=True)
+        if connection_serialized.is_valid():
+            connection_serialized.save()
+            return JsonResponse(connection_serialized.data, status=200)
+        else:
+            return JsonResponse(connection_serialized.errors, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
