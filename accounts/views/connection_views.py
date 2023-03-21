@@ -21,7 +21,7 @@ def create_connection(request):
         if not image:
             return JsonResponse({"error": "missing `image` field"}, status=400)
 
-        connection_serialized = ConnectionSerializer(data=request.data, partial=True)
+        connection_serialized = ConnectionSerializer(data=request.data)
 
         if not connection_serialized.is_valid():
             return JsonResponse(connection_serialized.errors, status=400)
