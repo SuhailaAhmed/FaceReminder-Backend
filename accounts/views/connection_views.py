@@ -21,7 +21,7 @@ def create_connection(request):
         if not image:
             return JsonResponse({"error": "missing `image` field"}, status=400)
 
-        connection_serialized = ConnectionSerializer(data=request.data, partial=True)
+        connection_serialized = ConnectionSerializer(data=request.data)
 
         if not connection_serialized.is_valid():
             return JsonResponse(connection_serialized.errors, status=400)
@@ -43,7 +43,7 @@ def update_connection(request, connection_id):
     try:
         account = request.user
         connection = account.connections.get(id=connection_id)
-        connection_serialized = ConnectionSerializer(connection, data=request.data, partial=True)
+        connection_serialized = ConnectionSerializer(instance=connection, data=request.data, partial=True)
         if connection_serialized.is_valid():
             connection_serialized.save()
             return JsonResponse(connection_serialized.data, status=200)
