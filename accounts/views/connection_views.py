@@ -2,16 +2,9 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from accounts.models.connection import Connection
 from accounts.serializers.connection import ConnectionSerializer
 
 
-@api_view(
-    [
-        "POST",
-    ]
-)
-@permission_classes([IsAuthenticated])
 def create_connection(request):
     try:
         account = request.user
@@ -55,8 +48,9 @@ def update_connection(request, connection_id):
 
 def retrieve_connections(request):
     account = request.user
-    connections = list(account.connections.all())
-    return JsonResponse({"data": connections}, status=200)
+    connections = account.connections.all()
+    connections_serializer = ConnectionSerializer(instance=connections, many=True)
+    return JsonResponse(connections_serializer.data, status=200)
 
 
 @api_view(["POST", "GET"])
