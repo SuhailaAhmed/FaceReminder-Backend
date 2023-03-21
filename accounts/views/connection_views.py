@@ -26,12 +26,6 @@ def create_connection(request):
         return JsonResponse({"error": str(e)}, status=400)
 
 
-@api_view(
-    [
-        "PATCH",
-    ]
-)
-@permission_classes([IsAuthenticated])
 def update_connection(request, connection_id):
     try:
         account = request.user
@@ -53,6 +47,13 @@ def retrieve_connections(request):
     return JsonResponse(connections_serializer.data, status=200)
 
 
+def retrieve_single_connection(request, connection_id):
+    account = request.user
+    connection = account.connections.get(id=connection_id)
+    connection_serializer = ConnectionSerializer(instance=connection)
+    return JsonResponse(connection_serializer.data, status=200)
+
+
 @api_view(["POST", "GET"])
 @permission_classes(
     [
@@ -64,3 +65,16 @@ def connections(request):
         return create_connection(request)
     elif request.method == "GET":
         return retrieve_connections(request)
+
+
+@api_view(["PATCH", "GET"])
+@permission_classes(
+    [
+        IsAuthenticated,
+    ]
+)
+def connection(request):
+    if request.method == "PATCH":
+        return update_connection(request)
+    elif request.method == "GET":
+        return retrieve_single_connection(request)

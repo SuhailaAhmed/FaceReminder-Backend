@@ -11,6 +11,7 @@ from accounts.swagger.connection import (
     create_connection_endpoint,
     retrieve_connections_endpoint,
     update_connection_endpoint,
+    retrieve_single_connection_endpoint,
 )
 from accounts.swagger.profile import profiles_endpoint
 from accounts.views.auth_views import (
@@ -21,7 +22,7 @@ from accounts.views.auth_views import (
     register,
     set_password,
 )
-from accounts.views.connection_views import connections, update_connection
+from accounts.views.connection_views import connections, connection
 from accounts.views.profile_views import profiles
 
 auth_urls = [
@@ -34,7 +35,7 @@ auth_urls = [
 ]
 connection_urls = [
     path("", connections, name="connections"),
-    path("<int:connection_id>", update_connection, name="update_connection"),
+    path("<int:connection_id>", connection, name="connection"),
 ]
 urlpatterns = [
     path("auth/", include(auth_urls)),
