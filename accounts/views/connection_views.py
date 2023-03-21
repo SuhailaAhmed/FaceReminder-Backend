@@ -43,7 +43,7 @@ def update_connection(request, connection_id):
     try:
         account = request.user
         connection = account.connections.get(id=connection_id)
-        connection_serialized = ConnectionSerializer(connection, data=request.data, partial=True)
+        connection_serialized = ConnectionSerializer(instance=connection, data=request.data, partial=True)
         if connection_serialized.is_valid():
             connection_serialized.save()
             return JsonResponse(connection_serialized.data, status=200)

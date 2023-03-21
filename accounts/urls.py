@@ -20,10 +20,12 @@ auth_urls = [
     path("check-token/<str:token>", check_token, name="check-token"),
     path("set-password/<str:token>", set_password, name="set-password"),
 ]
-
+connection_urls = [
+    path("", create_connection, name="create_connection"),
+    path("connections/<int:connection_id>", update_connection, name="update_connection"),
+]
 urlpatterns = [
     path("auth/", include(auth_urls)),
     path("profiles/", profiles, name="profile"),
-    path("connections/", create_connection, name="create_connection"),
-    path("connections/connection_id", update_connection, name="update_connection"),
+    path("connections/", include(connection_urls)),
 ]
