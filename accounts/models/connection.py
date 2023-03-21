@@ -15,7 +15,7 @@ class Connection(models.Model):
     image = models.ImageField(upload_to=get_image_path, storage=MediaStorage)
     name = models.CharField(max_length=100, null=True, blank=True)
     relation = models.CharField(max_length=100, null=True, blank=True)
-    age = models.IntegerField(null=True, blank=True)
+    age = models.PositiveIntegerField(default=18)
     address = models.CharField(max_length=100, null=True, blank=True)
     biography = models.CharField(max_length=4000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

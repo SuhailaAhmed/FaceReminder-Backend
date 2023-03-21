@@ -30,5 +30,9 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(Connection)
 class ConnectionAdmin(admin.ModelAdmin):
     list_display = ("name", "account", "age", "relation")
-    search_fields = ("name", "account")
-    readonly_fields = ("created_at", "updated_at")
+    search_fields = ("name", "account__name")
+    readonly_fields = ("account", "created_at", "updated_at")
+
+    @admin.display()
+    def account(self, obj):
+        return obj.account.profile.fullname
