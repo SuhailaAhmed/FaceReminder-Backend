@@ -1,26 +1,31 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from rest_framework.decorators import api_view, permission_classes
-from accounts.serializers.account import AccountSerializer
-from accounts.models.account import Account
-from accounts.models.profile import Profile
-from accounts.models.token import AccountToken
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
+from datetime import datetime, timedelta
+
 from django.core import mail
-from Gp_Backend import settings
+from django.http import JsonResponse
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.timezone import make_aware
-from datetime import datetime, timedelta
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+from accounts.models.account import Account
+from accounts.models.profile import Profile
+from accounts.models.token import AccountToken
+from accounts.serializers.account import AccountSerializer
+from Gp_Backend import settings
 
 # Create your views here.
+
 
 def has_numbers(inputString):
     return any(char.isdigit() for char in inputString)
 
+
 def has_characters(inputString):
     return any(char.isalpha() for char in inputString)
+
 
 @api_view(
     [

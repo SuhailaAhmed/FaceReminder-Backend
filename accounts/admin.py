@@ -1,8 +1,9 @@
 from django.contrib import admin
+
 from accounts.models.account import Account
 from accounts.models.connection import Connection
-from accounts.models.token import AccountToken
 from accounts.models.profile import Profile
+from accounts.models.token import AccountToken
 
 
 # Register your models here.
@@ -25,6 +26,13 @@ class ProfileAdmin(admin.ModelAdmin):
     search_fields = ("fullname", "address")
     readonly_fields = ("account",)
 
+
 @admin.register(Connection)
 class ConnectionAdmin(admin.ModelAdmin):
-    list_display = ("relation", "account", "age")
+    list_display = ("name", "account", "age", "relation")
+    search_fields = ("name", "account__name")
+    readonly_fields = ("account", "created_at", "updated_at")
+
+    @admin.display()
+    def account(self, obj):
+        return obj.account.profile.fullname
