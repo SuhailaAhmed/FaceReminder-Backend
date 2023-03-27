@@ -9,7 +9,6 @@ from accounts.swagger.auth import (
 )
 from accounts.swagger.connection import (
     create_connection_endpoint,
-    retrieve_connections_endpoint,
     update_connection_endpoint,
 )
 from accounts.swagger.profile import profiles_endpoint
