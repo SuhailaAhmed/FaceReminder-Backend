@@ -35,11 +35,3 @@ update_connection_endpoint = swagger_auto_schema(
     ),
     responses={200: openapi.Response("Realtive updated successfully")},
 )(connection)
-
-retrieve_connections_endpoint = swagger_auto_schema(
-    method="Get", responses={200: openapi.Response("Connections retrieved sucessfully")}
-)(connections)
-
-retrieve_single_connection_endpoint = swagger_auto_schema(
-    method="Get", responses={200: openapi.Response("Connection retrieved sucessfully")}
-)(connection)

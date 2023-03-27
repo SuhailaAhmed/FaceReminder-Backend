@@ -36,6 +36,8 @@ def update_connection(request, connection_id):
             return JsonResponse(connection_serialized.data, status=200)
         else:
             return JsonResponse(connection_serialized.errors, status=400)
+    except account.connections.DoesNotExist:
+        return JsonResponse({"error": "There's no connection with this id for this account!"}, status=400)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
@@ -48,10 +50,13 @@ def retrieve_connections(request):
 
 
 def retrieve_single_connection(request, connection_id):
-    account = request.user
-    connection = account.connections.get(id=connection_id)
-    connection_serializer = ConnectionSerializer(instance=connection)
-    return JsonResponse(connection_serializer.data, status=200)
+    try:
+        account = request.user
+        connection = account.connections.get(id=connection_id)
+        connection_serializer = ConnectionSerializer(instance=connection)
+        return JsonResponse(connection_serializer.data, status=200)
+    except account.connections.DoesNotExist:
+        return JsonResponse({"error": "There's no connection with this id for this account!"}, status=400)
 
 
 @api_view(["POST", "GET"])
@@ -73,8 +78,8 @@ def connections(request):
         IsAuthenticated,
     ]
 )
-def connection(request):
+def connection(request, connection_id):
     if request.method == "PATCH":
-        return update_connection(request)
+        return update_connection(request, connection_id)
     elif request.method == "GET":
-        return retrieve_single_connection(request)
+        return retrieve_single_connection(request, connection_id)
