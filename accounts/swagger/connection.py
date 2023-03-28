@@ -1,6 +1,7 @@
 from drf_yasg2 import openapi
 from drf_yasg2.utils import swagger_auto_schema
-from accounts.views.connection_views import create_connection, update_connection
+
+from accounts.views.connection_views import connections, update_connection
 
 create_connection_endpoint = swagger_auto_schema(
     method="Post",
@@ -17,7 +18,7 @@ create_connection_endpoint = swagger_auto_schema(
         },
     ),
     responses={200: openapi.Response("Realtive added successfully")},
-)(create_connection)
+)(connections)
 
 update_connection_endpoint = swagger_auto_schema(
     method="Patch",
