@@ -20,7 +20,8 @@ from accounts.views.auth_views import (
     register,
     set_password,
 )
-from accounts.views.connection_views import connections, connection
+from accounts.views.connection_views import connection, connections
+from accounts.views.image_views import recognize_image
 from accounts.views.profile_views import profiles
 
 auth_urls = [
@@ -39,4 +40,5 @@ urlpatterns = [
     path("auth/", include(auth_urls)),
     path("profiles/", profiles, name="profile"),
     path("connections/", include(connection_urls)),
+    path("recognize/", recognize_image, name="recognize image"),
 ]
