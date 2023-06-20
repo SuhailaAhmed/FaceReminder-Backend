@@ -1,88 +1,90 @@
-from deepface import DeepFace
-import cv2
+import glob
 import os
-from os import listdir,makedirs
+
+# import seaborn as sns
+import time
+from os import listdir, makedirs
+
+import cv2
+import deepface
 import numpy as np
 import pandas as pd
+
+# import matplotlib.pylab as plt
+# from google.colab import drive
+import PIL
+from deepface import DeepFace
+from pandas.core.series import Series
 from PIL import Image
 
-"""Importing dataset"""
 
-data_path = 'path_of_folder'
+class Face_reconition_model:
+    """
+    A class for face recognition using deepface
+    All deepface functions can take model type and backends "Face detector" as arguments, The default is VGG-Face model and opencv detector
+    Here we used Facenet model in recognition, and mtcnn in face detection
 
-"""Preprocessing dataset"""
+    Attributes:
+      models: A list of the available models to be used in Deepface library
+      backends: A list of the available backends to be used in Deepface library
 
-f = data_path
-os.listdir(f)
+    Methods:
+      verify_face: verifies if the two images are matched
 
-# Resizing images into 512*512
+          Args:
+              image1_path: A string path for the image to be verified
+              image2_path: A string path for the image to be matched with
 
-for file in os.listdir(f):
-    f_img = f+"/"+file
-    img = Image.open(f_img)
-    img = img.resize((512,512))
-    img.save(f_img)
+          Returns:
+              is_verified: A boolean value saying is it verified or not,
+                           It is orginally a part of a dictionary of whether its verified or not, threshold of the detector, .. etc
+                           But we only return a boolean value saying is it verified or not
 
 
-# Convert to gray scale image
+      recognize_face: Recognizes a face in comparasion to a stored folder
 
-path = data_path # Source Folder
-path_folders = path.parse('/')
-last_folder = path_folders.pop() 
-last_folder += '_gray' 
-path_folders.append(last_folder) 
-dstpath = '/'.join(path_folders) # Destination folder
+          Args:
+              image_path: A string path for the image to be recognized
+              folder_path: A string path for the folder where the other images are stored to be matched with
 
-try:
-    makedirs(dstpath)
-except:
-    print ("Directory already exist, images will be written in asme folder")
+          Returns:
+            is_recongnized: A string path to the matching image found in a folder,
+                            It is orginally a part of a dataframe, we are only interested in the path value
+                            If no match is found, "Null" is returned
 
-# Folder won't used
+    """
 
-files = os.listdir(path)
+    def __init__(self):
+        # Models and detectors used in deepface functions
+        self.models = ["VGG-Face", "Facenet", "Facenet512", "OpenFace", "DeepFace", "DeepID", "ArcFace", "Dlib", "SFace"]
+        self.backends = ["mediapipe", "ssd", "dlib", "mtcnn", "retinaface"]
 
-for image in files:
-    img = cv2.imread(os.path.join(path,image))
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    cv2.imwrite(os.path.join(dstpath,image),gray)
+    # 3-1
+    def verify_face(self, image1_path, image2_path):
+        is_verified = DeepFace.verify(
+            image1_path, image2_path, detector_backend=self.backends[3], model_name=self.models[2], distance_metric="cosine"
+        )
+        is_verified = is_verified["verified"]  # use mtcnn, also use openface model
+        return is_verified
 
-""" Face recognition class """
+    def recognize_face(self, image_path, folder_path):
+        is_recongnized = DeepFace.find(
+            image_path, folder_path, detector_backend=self.backends[4], enforce_detection=False, model_name=self.models[2]
+        )
 
-class Face_reconition_model():
-  
-  def __init__(self):
-    # Models and detectors used in deepface functions
-    self.models = ["VGG-Face", "Facenet", "Facenet512", "OpenFace", "DeepFace", "DeepID", "ArcFace", "Dlib", "SFace"]
-    self.backends = ['mediapipe', 'ssd', 'dlib', 'mtcnn', 'retinaface']
+        if np.size(is_recongnized):
+            is_recongnized = pd.DataFrame(is_recongnized[0])
+        else:
+            is_recongnized = None
+        return is_recongnized
 
-  def verify_face(self, image1_path, image2_path):
-    is_verified = DeepFace.verify( image1_path, image2_path, detector_backend =self.backends[3] ,model_name= self.models[2], distance_metric='cosine')
-    is_verified = is_verified["verified"] #use mtcnn, also use openface model
-    return is_verified
 
-  def recognize_face(self, image_path,folder_path):
-    is_recongnized = DeepFace.find(image_path, folder_path, detector_backend =self.backends[4],enforce_detection=False,model_name= self.models[2]) 
-    if(np.size(is_recongnized)):
-      is_recongnized = is_recongnized[:][0]
-    else:
-      is_recongnized = "Null"
-    return is_recongnized
+def recognized(im, folder):
+    model = Face_reconition_model()
+    rec = model.recognize_face(im, folder)
+    if rec is None:
+        return rec
+    df_columns = ["identity", "das", "ww", "ee", "eae", "rr"]
+    df = pd.DataFrame(rec, columns=df_columns)
 
-def recognized(im,folder):
-  model=Face_reconition_model()
-  rec= model.recognize_face(im,folder)
-  df=pd.DataFrame(rec)
-  return df['identity'][0]
-
-image_path = ''
-
-im= cv2.imread(image_path)
-im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-im = cv2.resize(im, (512,512), interpolation = cv2.INTER_AREA)
-filename = 'Preprocessed.jpg'
-cv2.imwrite(filename,im)
-
-im="/Preprocessed.jpg"
-fpath=dstpath
-recognized(im,fpath)
+    return df["identity"][0]

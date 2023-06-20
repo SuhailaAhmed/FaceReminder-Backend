@@ -1,14 +1,14 @@
+import os
+
+from django.core.files.storage import default_storage
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, parser_classes, permission_classes
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.face_recognition import recognized
-from Gp_Backend.s3_storages import MediaStorage
-
-
-def upload_image(image, image_path):
-    storage = MediaStorage()
-    storage.save(image_path, image)
+from accounts.serializers.image_serializer import ImageSerializer
+from Gp_Backend import settings
 
 
 @api_view(
@@ -21,31 +21,22 @@ def upload_image(image, image_path):
         IsAuthenticated,
     ]
 )
+@parser_classes([FormParser, MultiPartParser, JSONParser])
 def recognize_image(request):
-    image = request.data.get("image", None)
+    body = request.data
+    image_serialzer = ImageSerializer(data=body)
 
-    if not image:
-        return JsonResponse({"error": "missing `image`"}, status=400)
+    image_serialzer.is_valid(raise_exception=True)
+    image = image_serialzer.validated_data["image"]
 
-    filename = image.name
-    image_path = f"recognition/{filename}"
-    upload_image(image, image_path)
+    image_name = default_storage.save(image.name, image)
 
-    folder_path = f"connections/"
+    image_url = f"\media\{image_name}"
+    image_path = f"{settings.BASE_DIR}{image_url}"
+    print("base DIR: ", settings.BASE_DIR)
+    print("image_path: ", image_path)
+    print(settings.FOLDER1_PATH)
 
-    recognized_connection = recognized(image_path, folder_path)
-    return recognized_connection
+    recognized_connection = recognized(image_path, settings.FOLDER1_PATH)
 
-
-@permission_classes(
-    [
-        IsAuthenticated,
-    ]
-)
-def check_image(request):
-    image = request.data.get("image", None)
-
-    if not image:
-        return True
-    else:
-        False
+    return JsonResponse({"res": recognized_connection}, status=200, safe=False)

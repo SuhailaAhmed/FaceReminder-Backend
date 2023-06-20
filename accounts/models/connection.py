@@ -1,7 +1,5 @@
 from django.db import models
 
-from Gp_Backend.s3_storages import MediaStorage
-
 
 def get_image_path(instance, filename):
     # Get the account id from the instance
@@ -12,7 +10,7 @@ def get_image_path(instance, filename):
 
 class Connection(models.Model):
     account = models.ForeignKey("accounts.Account", on_delete=models.CASCADE, related_name="connections")
-    image = models.ImageField(upload_to=get_image_path, storage=MediaStorage)
+    image = models.ImageField(upload_to="connections/")
     name = models.CharField(max_length=100, null=True, blank=True)
     relation = models.CharField(max_length=100, null=True, blank=True)
     age = models.PositiveIntegerField(default=18)
@@ -25,4 +23,4 @@ class Connection(models.Model):
         if self.name:
             return self.name
         else:
-            return "Connection_" + self.id
+            return f"Connection_{self.id}"

@@ -12,6 +12,7 @@ from accounts.swagger.connection import (
     update_connection_endpoint,
 )
 from accounts.swagger.profile import profiles_endpoint
+from accounts.swagger.recognize import recognize_image_endpoint
 from accounts.views.auth_views import (
     check_token,
     forget_password,

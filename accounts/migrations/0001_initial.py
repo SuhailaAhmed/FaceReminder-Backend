@@ -6,11 +6,8 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import Gp_Backend.s3_storages
-
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -63,9 +60,7 @@ class Migration(migrations.Migration):
                 ("address", models.CharField(blank=True, max_length=250, null=True)),
                 (
                     "image",
-                    models.ImageField(
-                        blank=True, null=True, storage=Gp_Backend.s3_storages.MediaStorage, upload_to="profiles/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="profiles/"),
                 ),
                 (
                     "account",
@@ -79,7 +74,7 @@ class Migration(migrations.Migration):
             name="Connection",
             fields=[
                 ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("image", models.ImageField(storage=Gp_Backend.s3_storages.MediaStorage, upload_to="connections/")),
+                ("image", models.ImageField(upload_to="connections/")),
                 ("name", models.CharField(max_length=100)),
                 ("relation", models.CharField(max_length=100)),
                 ("age", models.IntegerField(blank=True, null=True)),
