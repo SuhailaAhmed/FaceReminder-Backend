@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+
 from accounts.models.connection import Connection
 from accounts.serializers.connection import ConnectionSerializer
 
@@ -37,7 +38,7 @@ def update_connection(request, connection_id):
         else:
             return JsonResponse(connection_serialized.errors, status=400)
     except Connection.DoesNotExist:
-        return JsonResponse({"error": "There's no connection with this id for this account!"}, status=400)
+        return JsonResponse({"error": "There's no connection with this id for this account!"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
@@ -46,7 +47,7 @@ def retrieve_connections(request):
     account = request.user
     connections = account.connections.all()
     connections_serializer = ConnectionSerializer(instance=connections, many=True)
-    return JsonResponse(connections_serializer.data, status=200)
+    return JsonResponse(connections_serializer.data, status=200, safe=False)
 
 
 def retrieve_single_connection(request, connection_id):

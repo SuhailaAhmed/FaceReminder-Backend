@@ -7,6 +7,7 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.face_recognition import recognized
+from accounts.models.connection import Connection
 from accounts.serializers.image_serializer import ImageSerializer
 from Gp_Backend import settings
 
@@ -33,10 +34,20 @@ def recognize_image(request):
 
     image_url = f"\media\{image_name}"
     image_path = f"{settings.BASE_DIR}{image_url}"
-    print("base DIR: ", settings.BASE_DIR)
-    print("image_path: ", image_path)
-    print(settings.FOLDER1_PATH)
 
-    recognized_connection = recognized(image_path, settings.FOLDER1_PATH)
+    account_id = request.user.id
 
-    return JsonResponse({"res": recognized_connection}, status=200, safe=False)
+    recognized_connection = recognized(image_path, f"{settings.FOLDER1_PATH}\{account_id}")
+
+    if recognized_connection:
+        filename = os.path.basename(recognized_connection)
+        try:
+            connection = Connection.objects.get(image__endswith=filename)
+            connection_id = connection.id
+            return JsonResponse({"result": connection_id}, status=200, safe=False)
+
+        except Connection.DoesNotExist:
+            return JsonResponse({"error": "Connection not found for the given image name."}, status=400, safe=False)
+
+    else:
+        return JsonResponse({"result": recognized_connection}, status=201, safe=False)
