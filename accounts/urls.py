@@ -12,7 +12,7 @@ from accounts.swagger.connection import (
     update_connection_endpoint,
 )
 from accounts.swagger.profile import profiles_endpoint
-from accounts.swagger.recognize import recognize_image_endpoint
+from accounts.swagger.recognize import recognize_image
 from accounts.views.auth_views import (
     check_token,
     forget_password,
@@ -22,7 +22,7 @@ from accounts.views.auth_views import (
     set_password,
 )
 from accounts.views.connection_views import connection, connections
-from accounts.views.image_views import recognize_image
+from accounts.views.image_views import preview_image, recognize_image, upload
 from accounts.views.profile_views import profiles
 
 auth_urls = [
@@ -42,4 +42,6 @@ urlpatterns = [
     path("profiles/", profiles, name="profile"),
     path("connections/", include(connection_urls)),
     path("recognize/", recognize_image, name="recognize image"),
+    path("upload/", upload, name="upload"),
+    path("preview-image/", preview_image, name="preview image"),
 ]

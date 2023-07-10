@@ -2,8 +2,10 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from accounts.models.connection import Connection
+from accounts.facenet_final_class import add_new_representation
+from accounts.models.connection import Connection, get_image_folder_path
 from accounts.serializers.connection import ConnectionSerializer
+from Gp_Backend import settings
 
 
 def create_connection(request):
@@ -11,9 +13,13 @@ def create_connection(request):
         account = request.user
 
         image = request.data.get("image", None)
+        rep = request.data.get("rep", None)
 
         if not image:
             return JsonResponse({"error": "missing `image` field"}, status=400)
+
+        if not rep:
+            return JsonResponse({"error": "missing `rep` field"}, status=400)
 
         connection_serialized = ConnectionSerializer(data=request.data)
 
@@ -21,6 +27,12 @@ def create_connection(request):
             return JsonResponse(connection_serialized.errors, status=400)
 
         connection_serialized.save(account=account)
+
+        account_id = account.id
+        folder_path = f"{settings.FOLDER1_PATH}\{account_id}"
+        image_url = connection_serialized.data.get("image")
+        image_path = f"{settings.BASE_DIR}{image_url}"
+        add_new_representation(image_path, rep, folder_path)
 
         return JsonResponse(connection_serialized.data, status=201)
     except Exception as e:

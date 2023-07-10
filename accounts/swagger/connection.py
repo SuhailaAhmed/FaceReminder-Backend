@@ -7,9 +7,10 @@ create_connection_endpoint = swagger_auto_schema(
     method="Post",
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
-        required=["image"],
+        required=["image", "rep"],
         properties={
             "image": openapi.Schema(type=openapi.TYPE_STRING, description="image of relative"),
+            "rep": openapi.Schema(type=openapi.TYPE_STRING, description="representation of image"),
             "name": openapi.Schema(type=openapi.TYPE_STRING, description="name of relative"),
             "relation": openapi.Schema(type=openapi.TYPE_STRING, description="relation of relative"),
             "age": openapi.Schema(type=openapi.TYPE_INTEGER, description="age of relative"),

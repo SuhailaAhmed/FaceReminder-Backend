@@ -1,15 +1,70 @@
+import base64
 import os
 
-from django.core.files.storage import default_storage
+from django.core.files.storage import FileSystemStorage, default_storage
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, parser_classes, permission_classes
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 
-from accounts.face_recognition import recognized
+# from accounts.face_recognition import recognized
+from accounts.facenet_final_class import Facenet_find
 from accounts.models.connection import Connection
 from accounts.serializers.image_serializer import ImageSerializer
 from Gp_Backend import settings
+from Gp_Backend.settings import MEDIA_ROOT
+
+
+@csrf_exempt
+@api_view(
+    [
+        "POST",
+    ]
+)
+@permission_classes(
+    [
+        IsAuthenticated,
+    ]
+)
+def upload(request):
+    image_file = request.FILES.get("imageFile")
+    # Save the image file
+    if image_file:
+        file_path = os.path.join(MEDIA_ROOT, "ESP32CAMCap.jpg")
+        with open(file_path, "wb") as destination:
+            for chunk in image_file.chunks():
+                destination.write(chunk)
+        return JsonResponse({"message": "Image saved successfully."})
+    else:
+        return JsonResponse({"message": "No image."})
+
+
+@api_view(
+    [
+        "GET",
+    ]
+)
+@permission_classes(
+    [
+        IsAuthenticated,
+    ]
+)
+def preview_image(request):
+    # Construct the file path for the requested image
+    file_path = os.path.join(MEDIA_ROOT, "ESP32CAMCap.jpg")
+    # Check if the image file exists
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as image_file:
+            # Read the image file as bytes
+            image_data = image_file.read()
+            # Encode the image data as Base64
+            base64_image = base64.b64encode(image_data).decode("utf-8")
+
+            # Return the Base64 encoded image in the response
+            return JsonResponse({"image": base64_image})
+    else:
+        return JsonResponse({"error": "Image not found."}, status=404)
 
 
 @api_view(
@@ -37,7 +92,16 @@ def recognize_image(request):
 
     account_id = request.user.id
 
-    recognized_connection = recognized(image_path, f"{settings.FOLDER1_PATH}\{account_id}")
+    recognized_connection, rep = Facenet_find(image_path, f"{settings.FOLDER1_PATH}\{account_id}")
+
+    if os.path.exists(image_path):
+        os.remove(image_path)
+        print("Image deleted successfully.")
+    else:
+        print("Image does not exist.")
+
+    if recognized_connection == "no face detected":
+        return JsonResponse({"error": "Can't detect face from this image."}, status=400, safe=False)
 
     if recognized_connection:
         filename = os.path.basename(recognized_connection)
@@ -50,4 +114,4 @@ def recognize_image(request):
             return JsonResponse({"error": "Connection not found for the given image name."}, status=400, safe=False)
 
     else:
-        return JsonResponse({"result": recognized_connection}, status=201, safe=False)
+        return JsonResponse({"message": "doesn't exist", "image": body.get("image"), "rep": rep}, status=201, safe=False)

@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-q@ice*jdn!yhy962nx+s!m-y@(ymrq&^n^0fnbfr6a3^2*4=2m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG")
 
-ALLOWED_HOSTS = ["gp.uniparticle.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["3.71.165.228", "127.0.0.1", "192.168.1.8"]
 
 
 # Application definition
@@ -164,7 +164,7 @@ MEDIA_URL = "/media/"
 FOLDER1_PATH = os.path.join(MEDIA_ROOT, "connections")
 FOLDER2_PATH = os.path.join(MEDIA_ROOT, "recognition")
 FOLDER3_PATH = os.path.join(MEDIA_ROOT, "profiles")
-
+FOLDER4_PATH = os.path.join(BASE_DIR, "accounts")
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -180,11 +180,5 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-BASE_URL = "http://127.0.0.1:8000/" if ENV == "LOCAL" else "http://gp.uniparticle.com/"
+BASE_URL = "http://127.0.0.1:8000/" if ENV == "LOCAL" else "3.71.165.228"
 FORGET_PASSWORD_URL = BASE_URL + "accounts/auth/check-token/"
-
-# AWS_ACCESS_KEY_ID = "AKIAR4YOFTT7WF42BQ6E"
-# AWS_SECRET_ACCESS_KEY = "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"
-# AWS_S3_BUCKET_NAME = "up-gp-team1"
-# AWS_S3_REGION_NAME = "eu-central-1"
-# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"

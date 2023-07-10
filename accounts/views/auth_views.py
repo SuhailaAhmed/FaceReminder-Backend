@@ -1,3 +1,5 @@
+import os
+import shutil
 from datetime import datetime, timedelta
 
 from django.core import mail
@@ -69,6 +71,21 @@ def register(request):
 
     Profile.objects.create(account=account, fullname=full_name)
 
+    account_id = account.id
+    destination_folder = f"{settings.FOLDER1_PATH}\{account_id}"
+
+    source_path = os.path.join(settings.MEDIA_ROOT, "example.jpg")
+    if not os.path.exists(source_path):
+        return JsonResponse({"error": "Source image not found."}, status=404)
+
+    # Create the destination folder if it doesn't exist
+    if not os.path.exists(destination_folder):
+        os.makedirs(destination_folder)
+
+    # Copy the image file to the destination folder
+    destination_path = os.path.join(destination_folder, "example.jpg")
+    shutil.copy2(source_path, destination_path)
+
     return JsonResponse({"token": token.key, "account": AccountSerializer(account).data}, status=201)
 
 
@@ -108,7 +125,6 @@ def login(request):
 )
 @permission_classes([IsAuthenticated])
 def logout(request):
-
     try:
         user = request.user
         token = Token.objects.get(user=user)
@@ -176,7 +192,6 @@ def check_token(request, token):
 )
 def set_password(request, token):
     try:
-
         token = AccountToken.objects.get(uuid=token)
         time_now = make_aware(datetime.now())
         if token.created_at + timedelta(days=1) < time_now:
