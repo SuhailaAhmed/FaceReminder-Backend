@@ -9,7 +9,7 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 
 # from accounts.face_recognition import recognized
-from accounts.facenet_final_class import Facenet_find
+from accounts.copy_of_facenet_final_class import Facenet_find
 from accounts.models.connection import Connection
 from accounts.serializers.image_serializer import ImageSerializer
 from Gp_Backend import settings
@@ -87,12 +87,11 @@ def recognize_image(request):
 
     image_name = default_storage.save(image.name, image)
 
-    image_url = f"\media\{image_name}"
-    image_path = f"{settings.BASE_DIR}{image_url}"
+    image_path = os.path.join(MEDIA_ROOT, image_name)
 
     account_id = request.user.id
 
-    recognized_connection, rep = Facenet_find(image_path, f"{settings.FOLDER1_PATH}\{account_id}")
+    recognized_connection, rep = Facenet_find(image_path, f"{settings.FOLDER1_PATH}/{account_id}")
 
     if os.path.exists(image_path):
         os.remove(image_path)

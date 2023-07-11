@@ -9,34 +9,34 @@ from Gp_Backend import settings
 
 
 def create_connection(request):
-    try:
-        account = request.user
+    # try:
+    account = request.user
 
-        image = request.data.get("image", None)
-        rep = request.data.get("rep", None)
+    image = request.data.get("image", None)
+    rep = request.data.get("rep", None)
 
-        if not image:
-            return JsonResponse({"error": "missing `image` field"}, status=400)
+    if not image:
+        return JsonResponse({"error": "missing `image` field"}, status=400)
 
-        if not rep:
-            return JsonResponse({"error": "missing `rep` field"}, status=400)
+    if not rep:
+        return JsonResponse({"error": "missing `rep` field"}, status=400)
 
-        connection_serialized = ConnectionSerializer(data=request.data)
+    connection_serialized = ConnectionSerializer(data=request.data)
 
-        if not connection_serialized.is_valid():
-            return JsonResponse(connection_serialized.errors, status=400)
+    if not connection_serialized.is_valid():
+        return JsonResponse(connection_serialized.errors, status=400)
 
-        connection_serialized.save(account=account)
+    connection_serialized.save(account=account)
 
-        account_id = account.id
-        folder_path = f"{settings.FOLDER1_PATH}\{account_id}"
-        image_url = connection_serialized.data.get("image")
-        image_path = f"{settings.BASE_DIR}{image_url}"
-        add_new_representation(image_path, rep, folder_path)
+    account_id = account.id
+    folder_path = f"{settings.FOLDER1_PATH}/{account_id}"
+    image_url = connection_serialized.data.get("image")
+    image_path = f"{settings.BASE_DIR}{image_url}"
+    add_new_representation(image_path, rep, folder_path)
 
-        return JsonResponse(connection_serialized.data, status=201)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
+    return JsonResponse(connection_serialized.data, status=201)
+    # except Exception as e:
+    #     return JsonResponse({"error": str(e)}, status=400)
 
 
 def update_connection(request, connection_id):

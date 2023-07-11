@@ -107,12 +107,12 @@ if ENV in ["LOCAL", "DEV"]:
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": config("DB_NAME"),
-            "USER": config("DB_USER"),
-            "PASSWORD": config("DB_PASSWORD"),
-            "HOST": config("DB_HOST"),
-            "PORT": config("DB_PORT"),
+            "ENGINE": config("DEFAULT_DB_ENGINE"),
+            "NAME": config("DEFAULT_DB_NAME"),
+            "USER": config("DEFAULT_DB_USERNAME"),
+            "PASSWORD": config("DEFAULT_DB_PASSWORD"),
+            "HOST": config("DEFAULT_DB_HOST"),
+            "PORT": config("DEFAULT_DB_PORT"),
         }
     }
 

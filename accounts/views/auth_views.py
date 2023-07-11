@@ -72,7 +72,7 @@ def register(request):
     Profile.objects.create(account=account, fullname=full_name)
 
     account_id = account.id
-    destination_folder = f"{settings.FOLDER1_PATH}\{account_id}"
+    destination_folder = f"{settings.FOLDER1_PATH}/{account_id}"
 
     source_path = os.path.join(settings.MEDIA_ROOT, "example.jpg")
     if not os.path.exists(source_path):

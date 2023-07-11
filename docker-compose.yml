@@ -1,0 +1,42 @@
+version: "3.8"
+
+volumes:
+  dbvmaria:
+
+services:
+  db:
+    container_name: gp-maria
+    image: mariadb:10.6.11
+    restart: always
+    volumes:
+      - dbvmaria:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DEFAULT_DB_NAME}
+      # - MYSQL_USER=${DEFAULT_DB_USERNAME}
+      - MYSQL_PASSWORD=${DEFAULT_DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DEFAULT_DB_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    expose:
+      - 3306
+  app:
+    container_name: gp-app
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gp:gp
+    command: python /gp/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/gp
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  tensorflow:
+    container_name: gp-tensorflow
+    image: tensorflow/tensorflow
+    restart: always
+    expose:
+      - 8888
+    depends_on:
+      - app
