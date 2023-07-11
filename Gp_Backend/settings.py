@@ -109,7 +109,6 @@ else:
         "default": {
             "ENGINE": config("DEFAULT_DB_ENGINE"),
             "NAME": config("DEFAULT_DB_NAME"),
-            "USER": config("DEFAULT_DB_USERNAME"),
             "PASSWORD": config("DEFAULT_DB_PASSWORD"),
             "HOST": config("DEFAULT_DB_HOST"),
             "PORT": config("DEFAULT_DB_PORT"),
