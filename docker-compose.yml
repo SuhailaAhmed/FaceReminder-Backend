@@ -12,7 +12,7 @@ services:
       - dbvmaria:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=${DEFAULT_DB_NAME}
-      # - MYSQL_USER=${DEFAULT_DB_USERNAME}
+      - MYSQL_USER=${DEFAULT_DB_USERNAME}
       - MYSQL_PASSWORD=${DEFAULT_DB_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DEFAULT_DB_PASSWORD}
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
