@@ -18,3 +18,5 @@ RUN pip install setuptools==57.0.0
 # APP REQUIREMENTS
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt  --no-cache-dir
+
+EXPOSE 80
