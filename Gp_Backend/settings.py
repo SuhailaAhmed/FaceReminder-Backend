@@ -180,5 +180,5 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-BASE_URL = "http://127.0.0.1:8000/" if ENV == "LOCAL" else "3.71.165.228"
+BASE_URL = "http://127.0.0.1:8000/" if ENV == "LOCAL" else "http://3.71.165.228:80/"
 FORGET_PASSWORD_URL = BASE_URL + "accounts/auth/check-token/"
