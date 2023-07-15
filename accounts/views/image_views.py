@@ -1,5 +1,6 @@
 import base64
 import os
+import cv2
 
 from django.core.files.storage import FileSystemStorage, default_storage
 from django.http import JsonResponse
@@ -65,7 +66,16 @@ def preview_image(request):
             return JsonResponse({"image": base64_image})
     else:
         return JsonResponse({"error": "Image not found."}, status=404)
+    
+def resize_img(current_img):
+  
+  factor_0 = 512 / len(current_img[0])
+  factor_1 = 512 / len(current_img[1])
+  factor = min(factor_0, factor_1)
 
+  dsize = (int(current_img.shape[1] * factor), int(current_img.shape[0] * factor))
+  current_img = cv2.resize(current_img, dsize)
+  return current_img
 
 @api_view(
     [
@@ -91,10 +101,11 @@ def recognize_image(request):
 
     account_id = request.user.id
 
+    image_resized = resize_img(image)
     print(settings.BASE_DIR)
     print(settings.FOLDER1_PATH)
     print(f"{settings.FOLDER1_PATH}/{account_id}")
-    recognized_connection, rep = Facenet_find(image_path, f"{settings.FOLDER1_PATH}/{account_id}")
+    recognized_connection, rep = Facenet_find(image_resized, f"{settings.FOLDER1_PATH}/{account_id}")
 
     if os.path.exists(image_path):
         os.remove(image_path)
