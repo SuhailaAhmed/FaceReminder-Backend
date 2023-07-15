@@ -103,11 +103,11 @@ def recognize_image(request):
 
     img = cv2.imread(image_path)
 
-    image_resized = resize_img(img)
+    # image_resized = resize_img(img)
     print(settings.BASE_DIR)
     print(settings.FOLDER1_PATH)
     print(f"{settings.FOLDER1_PATH}/{account_id}")
-    recognized_connection, rep = Facenet_find(image_resized, f"{settings.FOLDER1_PATH}/{account_id}")
+    recognized_connection, rep = Facenet_find(image_path, f"{settings.FOLDER1_PATH}/{account_id}")
 
     if os.path.exists(image_path):
         os.remove(image_path)
