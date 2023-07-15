@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-q@ice*jdn!yhy962nx+s!m-y@(ymrq&^n^0fnbfr6a3^2*4=2m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG")
 
-ALLOWED_HOSTS = ["3.120.37.202", "127.0.0.1", "192.168.1.8"]
+ALLOWED_HOSTS = ["52.58.150.200", "127.0.0.1", "192.168.1.8"]
 
 
 # Application definition
@@ -180,5 +180,5 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-BASE_URL = "http://127.0.0.1:8000/" if ENV == "LOCAL" else "http://3.71.165.228:80/"
+BASE_URL = "http://127.0.0.1:8000/" if ENV == "LOCAL" else "http://52.58.150.200:80/"
 FORGET_PASSWORD_URL = BASE_URL + "accounts/auth/check-token/"
