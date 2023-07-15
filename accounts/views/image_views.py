@@ -101,7 +101,9 @@ def recognize_image(request):
 
     account_id = request.user.id
 
-    image_resized = resize_img(image)
+    img = cv2.imread(image_path)
+
+    image_resized = resize_img(img)
     print(settings.BASE_DIR)
     print(settings.FOLDER1_PATH)
     print(f"{settings.FOLDER1_PATH}/{account_id}")
