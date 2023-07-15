@@ -91,6 +91,8 @@ def recognize_image(request):
 
     account_id = request.user.id
 
+    print(settings.FOLDER1_PATH)
+    print(f"{settings.FOLDER1_PATH}/{account_id}")
     recognized_connection, rep = Facenet_find(image_path, f"{settings.FOLDER1_PATH}/{account_id}")
 
     if os.path.exists(image_path):
