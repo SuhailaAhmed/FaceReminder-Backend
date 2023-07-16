@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-q@ice*jdn!yhy962nx+s!m-y@(ymrq&^n^0fnbfr6a3^2*4=2m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG")
 
-ALLOWED_HOSTS = ["52.58.150.200", "127.0.0.1", "192.168.1.8"]
+ALLOWED_HOSTS = ["52.58.150.200", "127.0.0.1", "192.168.1.8", "face-reminder.online"]
 
 
 # Application definition
