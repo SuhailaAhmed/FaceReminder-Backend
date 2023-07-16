@@ -54,7 +54,8 @@ def upload(request):
 )
 def preview_image(request):
     # Construct the file path for the requested image
-    file_path = os.path.join(MEDIA_ROOT, "ESP32CAMCap.jpg")
+    account_id = request.user.id
+    file_path = os.path.join(f"{settings.FOLDER1_PATH}/{account_id}", "ESP32CAMCap.jpg")
     # Check if the image file exists
     if os.path.exists(file_path):
         with open(file_path, "rb") as image_file:
