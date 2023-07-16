@@ -30,13 +30,14 @@ from Gp_Backend.settings import MEDIA_ROOT
 )
 def upload(request):
     image_file = request.FILES.get("imageFile")
+    account_id = request.user.id
     # Save the image file
     if image_file:
-        file_path = os.path.join(MEDIA_ROOT, "ESP32CAMCap.jpg")
+        file_path = os.path.join(f"{settings.FOLDER1_PATH}/{account_id}", "ESP32CAMCap.jpg")
         with open(file_path, "wb") as destination:
             for chunk in image_file.chunks():
                 destination.write(chunk)
-        return JsonResponse({"message": "Image saved successfully."})
+        return JsonResponse({"message": "Image saved successfully.", "path":file_path})
     else:
         return JsonResponse({"message": "No image."})
 
