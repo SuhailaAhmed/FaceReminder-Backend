@@ -98,7 +98,7 @@ def resize_img(current_img):
 )
 # @parser_classes([FormParser, MultiPartParser, JSONParser])
 def recognize_image(request):
-    logger.warning("User"+ str(account_id) +': Start API ')
+    logger.warning("User"+ str(request.user.id) +': Start API ')
     body = request.data
     logger.warning("body:" + str(body))
     image_serialzer = ImageSerializer(data=body)
