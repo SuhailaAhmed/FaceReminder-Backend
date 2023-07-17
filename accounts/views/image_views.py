@@ -96,7 +96,7 @@ def resize_img(current_img):
         IsAuthenticated,
     ]
 )
-@parser_classes([FormParser, MultiPartParser, JSONParser])
+# @parser_classes([FormParser, MultiPartParser, JSONParser])
 def recognize_image(request):
     body = request.data
     image_serialzer = ImageSerializer(data=body)
