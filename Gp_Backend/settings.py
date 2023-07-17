@@ -165,6 +165,9 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31536000  # 1 year
 
+# Set the maximum request payload size for file uploads
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
