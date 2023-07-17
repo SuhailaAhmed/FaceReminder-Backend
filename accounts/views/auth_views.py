@@ -196,32 +196,32 @@ def set_password(request, token):
         time_now = make_aware(datetime.now())
         if token.created_at + timedelta(days=1) < time_now:
             token.delete()
-            return JsonResponse({"error": "Token is expired!"}, status=400)
+            return render(request,"accounts/info.html", {"message":"Token is expired!"})
         password = request.data.get("new_password", None)
         confirm_password = request.data.get("confirm_password", None)
         if not password:
-            return JsonResponse({"error": "Please write password!"}, status=400)
+            return render(request,"accounts/info.html", {"message":"Please write password!"})
 
         if not confirm_password:
-            return JsonResponse({"error": "Please confirm your password!"}, status=400)
+            return render(request,"accounts/info.html", {"message":"Please confirm your password!"})
 
         if password != confirm_password:
-            return JsonResponse({"messgae": "Password and Confirm passwords aren't the same!"}, status=400)
+            return render(request,"accounts/info.html", {"message":"Password and Confirm passwords aren't the same!"})
 
         if len(password) < 8:
-            return JsonResponse({"message": "Password must be at least 8 characters!"}, status=400)
+            return render(request,"accounts/info.html", {"message":"Password must be at least 8 characters!"})
 
         if not (password.isalnum() and not password.isalpha() and not password.isdigit()):
-            return JsonResponse({"message": "Password must contain numbers and characters!"}, status=400)
+            return render(request,"accounts/info.html", {"message":"Password must contain numbers and characters"})
 
         account = token.account
         account.set_password(password)
         account.save()
         token.delete()
-        return JsonResponse({"message": "Password is changed successfully"}, status=200)
+        return render(request,"accounts/info.html", {"message":"Password is changed successfully"})
 
     except AccountToken.DoesNotExist:
-        return JsonResponse({"error": "Token does not exist!"}, status=400)
+        return render(request,"accounts/info.html", {"message":"Token does not exist!"})
     
 
 @api_view(
@@ -232,12 +232,12 @@ def set_password(request, token):
 def new_password(request):
     token = request.GET.get("token", None)
     if not token:
-        return render(request,"accounts/fail.html", {"message":"No token"})
+        return render(request,"accounts/info.html", {"message":"No token"})
     token = AccountToken.objects.get(uuid=token)
     time_now = make_aware(datetime.now())
     if token.created_at + timedelta(days=1) < time_now:
         token.delete()
-        return render(request,"accounts/fail.html", {"message":"Token is expired"})
+        return render(request,"accounts/info.html", {"message":"Token is expired"})
     token.created_at = time_now
     token.save()
     return render(request,"accounts/create_new_password.html", {"token": token})
