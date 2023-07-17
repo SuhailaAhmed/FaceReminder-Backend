@@ -71,7 +71,7 @@ def preview_image(request):
 
             # Return the Base64 encoded image in the response
             logger.debug('Image Reterived successfully ')
-            logger.debug("User"+ account_id +': External Image was in preview_image succeed ')
+            logger.debug("User"+ str(account_id) +': External Image was in preview_image succeed ')
             return JsonResponse({"image": base64_image})
     else:
         return JsonResponse({"error": "Image not found."}, status=404)
