@@ -20,7 +20,7 @@ from Gp_Backend.settings import MEDIA_ROOT
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
+logging.basicConfig(filename='warning.log', level=logging.WARNING)
 
 @csrf_exempt
 @api_view(
