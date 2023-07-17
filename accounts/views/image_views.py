@@ -16,6 +16,11 @@ from accounts.serializers.image_serializer import ImageSerializer
 from Gp_Backend import settings
 from Gp_Backend.settings import MEDIA_ROOT
 
+# import the logging library
+import logging
+# Get an instance of a logger
+logger = logging.getLogger("requests")
+
 
 @csrf_exempt
 @api_view(
@@ -65,6 +70,8 @@ def preview_image(request):
             base64_image = base64.b64encode(image_data).decode("utf-8")
 
             # Return the Base64 encoded image in the response
+            logger.debug('Image Reterived successfully ')
+            logger.debug("User"+ account_id +': External Image was in preview_image succeed ')
             return JsonResponse({"image": base64_image})
     else:
         return JsonResponse({"error": "Image not found."}, status=404)
@@ -106,9 +113,6 @@ def recognize_image(request):
     img = cv2.imread(image_path)
 
     image_resized = resize_img(img)
-    print(settings.BASE_DIR)
-    print(settings.FOLDER1_PATH)
-    print(f"{settings.FOLDER1_PATH}/{account_id}")
     recognized_connection, rep = Facenet_find(image_resized, f"{settings.FOLDER1_PATH}/{account_id}")
 
     if os.path.exists(image_path):
