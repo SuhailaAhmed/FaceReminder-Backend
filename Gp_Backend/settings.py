@@ -143,7 +143,7 @@ LOGGING = {
     # A handler for debug. It is basically writing the DEBUG messages into a file called debug.log
     'handlers': {
         'file': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'debug.log',
         },
@@ -153,7 +153,7 @@ LOGGING = {
        # Usually you would put built in loggers like django or root here based on your needs
         'django': {
             'handlers': ['file'], #notice how file variable is called in handler which has been defined above
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'propagate': True,
         },
     },

@@ -19,7 +19,7 @@ from Gp_Backend.settings import MEDIA_ROOT
 # import the logging library
 import logging
 # Get an instance of a logger
-logger = logging.getLogger("requests")
+logger = logging.getLogger("__name__")
 
 
 @csrf_exempt
@@ -71,7 +71,7 @@ def preview_image(request):
 
             # Return the Base64 encoded image in the response
             logger.debug('Image Reterived successfully ')
-            logger.debug("User"+ str(account_id) +': External Image was in preview_image succeed ')
+            logger.warning("User"+ str(account_id) +': External Image was in preview_image succeed ')
             return JsonResponse({"image": base64_image})
     else:
         return JsonResponse({"error": "Image not found."}, status=404)
