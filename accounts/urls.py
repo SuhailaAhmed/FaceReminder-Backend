@@ -20,6 +20,7 @@ from accounts.views.auth_views import (
     logout,
     register,
     set_password,
+    new_password
 )
 from accounts.views.connection_views import connection, connections
 from accounts.views.image_views import preview_image, recognize_image, upload
@@ -30,6 +31,7 @@ auth_urls = [
     path("login/", login, name="login"),
     path("logout/", logout, name="logout"),
     path("forget-password/", forget_password, name="forget-password"),
+    path("new-password/", new_password, name="new-password"),
     path("check-token/<str:token>", check_token, name="check-token"),
     path("set-password/<str:token>", set_password, name="set-password"),
 ]

@@ -3,7 +3,7 @@ import shutil
 from datetime import datetime, timedelta
 
 from django.core import mail
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -197,7 +197,7 @@ def set_password(request, token):
         if token.created_at + timedelta(days=1) < time_now:
             token.delete()
             return JsonResponse({"error": "Token is expired!"}, status=400)
-        password = request.data.get("password", None)
+        password = request.data.get("new_password", None)
         confirm_password = request.data.get("confirm_password", None)
         if not password:
             return JsonResponse({"error": "Please write password!"}, status=400)
@@ -222,3 +222,24 @@ def set_password(request, token):
 
     except AccountToken.DoesNotExist:
         return JsonResponse({"error": "Token does not exist!"}, status=400)
+    
+
+@api_view(
+    [
+        "Get",
+    ]
+)
+def new_password(request):
+    token = request.GET.get("token", None)
+    if not token:
+        return render(request,"accounts/fail.html", {"message":"No token"})
+    token = AccountToken.objects.get(uuid=token)
+    time_now = make_aware(datetime.now())
+    if token.created_at + timedelta(days=1) < time_now:
+        token.delete()
+        return render(request,"accounts/fail.html", {"message":"Token is expired"})
+    token.created_at = time_now
+    token.save()
+    return render(request,"accounts/create_new_password.html", {"token": token})
+
+
