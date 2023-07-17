@@ -159,7 +159,7 @@ def forget_password(request):
         token = AccountToken.objects.create(account=account)
 
     subject = "GP Account password reset"
-    link = settings.FORGET_PASSWORD_URL + str(token.uuid)
+    link = f"{settings.FORGET_PASSWORD_URL}?token={token}"
     message = render_to_string("accounts/forget_password.html", {"link": link, "fullname": account.profile.fullname})
     plain_message = strip_tags(message)
     mail.send_mail(subject, plain_message, settings.EMAIL_HOST_USER, [email], html_message=message)
