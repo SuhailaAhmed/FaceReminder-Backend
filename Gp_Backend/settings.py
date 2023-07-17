@@ -145,7 +145,7 @@ LOGGING = {
         'file': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'debug.log',
+            'filename': BASE_DIR / 'warning.log',
         },
     },
     # A logger for DEBUG which has a handler called 'file'. A logger can have multiple handler
