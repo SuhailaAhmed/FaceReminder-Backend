@@ -11,6 +11,7 @@ from django.utils.timezone import make_aware
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.template import RequestContext
 
 from accounts.models.account import Account
 from accounts.models.profile import Profile
@@ -240,6 +241,6 @@ def new_password(request):
         return render(request,"accounts/info.html", {"message":"Token is expired"})
     token.created_at = time_now
     token.save()
-    return render(request,"accounts/create_new_password.html", {"token": token})
+    return render(request,"accounts/create_new_password.html", {"token": token}, RequestContext(request))
 
 
