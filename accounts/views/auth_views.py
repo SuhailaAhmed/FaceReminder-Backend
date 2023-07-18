@@ -190,9 +190,10 @@ def check_token(request, token):
         "Post",
     ]
 )
-def set_password(request, token):
+def set_password(request):
     try:
-        token = AccountToken.objects.get(uuid=token)
+        token_data = request.data.get("token", None)
+        token = AccountToken.objects.get(uuid=token_data)
         time_now = make_aware(datetime.now())
         if token.created_at + timedelta(days=1) < time_now:
             token.delete()

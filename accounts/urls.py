@@ -33,7 +33,7 @@ auth_urls = [
     path("forget-password/", forget_password, name="forget-password"),
     path("new-password/", new_password, name="new-password"),
     path("check-token/<str:token>", check_token, name="check-token"),
-    path("set-password/<str:token>", set_password, name="set-password"),
+    path("set-password", set_password, name="set-password"),
 ]
 connection_urls = [
     path("", connections, name="connections"),
